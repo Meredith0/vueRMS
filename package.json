@@ -1,6 +1,6 @@
 {
   "name": "d2-admin",
-  "version": "1.6.15",
+  "version": "2.1.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve --open",
@@ -31,6 +31,7 @@
     "screenfull": "^4.0.0",
     "ua-parser-js": "^0.7.18",
     "vue": "^2.5.17",
+    "vue-axios": "2.1.4",
     "vue-i18n": "^7.4.2",
     "vue-router": "^3.0.1",
     "vuex": "^3.0.1"
@@ -40,8 +41,8 @@
     "@kazupon/vue-i18n-loader": "^0.3.0",
     "@vue/cli-plugin-babel": "^3.0.0",
     "@vue/cli-plugin-eslint": "^3.0.0",
-    "@vue/cli-plugin-unit-jest": "^3.0.0",
-    "@vue/cli-service": "^3.0.0",
+    "@vue/cli-plugin-unit-jest": "^3.8.0",
+    "@vue/cli-service": "^3.8.0",
     "@vue/eslint-config-standard": "^3.0.0",
     "@vue/test-utils": "^1.0.0-beta.20",
     "babel-core": "7.0.0-bridge.0",
@@ -63,5 +64,20 @@
       "vue-cli-service lint",
       "git add"
     ]
-  }
+  },
+  "description": "[![Build Status](https://www.travis-ci.org/d2-projects/d2-admin-start-kit.svg?branch=master)](https://www.travis-ci.org/d2-projects/d2-admin-start-kit)",
+  "main": ".eslintrc.js",
+  "directories": {
+    "test": "tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/d2-projects/d2-admin-start-kit.git"
+  },
+  "author": "Meredith",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/d2-projects/d2-admin-start-kit/issues"
+  },
+  "homepage": "https://github.com/d2-projects/d2-admin-start-kit#readme"
 }

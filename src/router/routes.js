@@ -8,7 +8,7 @@ import layoutHeaderAside from '@/layout/header-aside'
 const frameIn = [
   {
     path: '/',
-    redirect: { name: 'index' },
+    redirect: {name: 'index'},
     component: layoutHeaderAside,
     children: [
       // 首页 必须 name:index
@@ -26,7 +26,7 @@ const frameIn = [
         name: 'refresh',
         hidden: true,
         component: {
-          beforeRouteEnter (to, from, next) {
+          beforeRouteEnter(to, from, next) {
             next(vm => vm.$router.replace(from.fullPath))
           },
           render: h => h()
@@ -38,8 +38,8 @@ const frameIn = [
         name: 'redirect',
         hidden: true,
         component: {
-          beforeRouteEnter (to, from, next) {
-            next(vm => vm.$router.replace(JSON.parse(from.params.route)))
+          beforeRouteEnter(to, from, next) {
+           next(vm => vm.$router.replace(JSON.parse(from.params.route)))
           },
           render: h => h()
         }
@@ -47,7 +47,7 @@ const frameIn = [
     ]
   },
   demo
-]
+];
 
 /**
  * 在主框架之外显示
@@ -59,7 +59,7 @@ const frameOut = [
     name: 'login',
     component: () => import('@/pages/login')
   }
-]
+];
 
 /**
  * 错误页面
@@ -71,10 +71,10 @@ const errorPage = [
     name: '404',
     component: () => import('@/pages/error-page-404')
   }
-]
+];
 
 // 导出需要显示菜单的
-export const frameInRoutes = frameIn
+export const frameInRoutes = frameIn;
 
 // 重新组织后导出
 export default [
