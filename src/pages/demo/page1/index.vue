@@ -1,12 +1,17 @@
 <template>
   <d2-container :filename="filename">
-    <template slot="header">Page 1 header</template>
-    Hello World
+    <CRUD_common>
+    </CRUD_common>
   </d2-container>
 </template>
 
 <script>
-export default {
+  import CRUD_common from "./CRUD_common.vue"
+
+  export default {
+    components:{
+      CRUD_common
+    },
   name: 'page1',
   data () {
     return {

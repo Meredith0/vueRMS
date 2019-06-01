@@ -2,7 +2,7 @@
   <div class="d2-panel-search-item" :class="hoverMode ? 'can-hover' : ''" flex>
     <div class="d2-panel-search-item__icon" flex-box="0">
       <div class="d2-panel-search-item__icon-box" flex="main:center cross:center">
-        <d2-icon v-if="item.icon" :name="item.icon"/>
+        <d2-icon v-if="item.icon111" :name="item.icon111"/>
         <d2-icon-svg v-else-if="item.iconSvg" :name="item.iconSvg"/>
         <d2-icon v-else name="file-o"/>
       </div>

@@ -9,8 +9,8 @@
       class="d2-contentmenu-item"
       flex="cross:center main:center">
       <d2-icon
-        v-if="item.icon"
-        :name="item.icon"/>
+        v-if="item.icon111"
+        :name="item.icon111"/>
       <div
         class="d2-contentmenu-item-title"
         flex-box="1">

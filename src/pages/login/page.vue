@@ -149,18 +149,6 @@
               this.$router.replace(this.$route.query.redirect || '/')
             })
           }
-          // this.$axios.post("/signin", this.formLogin)
-          // .then((response) => {
-          //   console.log(response);
-          //   if (response.status === 200) {
-          //     alert("登陆成功")
-          //
-          //   } else {
-          //     alert("登陆失败")
-          //   }
-          // }, (response) => {
-          //   this.$router.replace(this.$route.query.redirect || '/')
-          // })
           else {
             alert("登陆失败");
             // 登录表单校验失败
