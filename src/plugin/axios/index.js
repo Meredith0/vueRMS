@@ -40,16 +40,13 @@ const service = axios.create({
 // 默认url前缀
 axios.defaults.baseURL = 'http://127.0.0.1:8088';
 axios.defaults.headers.post['Content-Type'] = 'application/json';
-// axios.defaults.headers.post['access-control-allow-headers'] = "*";
-
-// 请求拦截器
-service.interceptors.request.use(
+//请求拦截器
+axios.interceptors.request.use(
   config => {
-    // 在请求发送之前做一些处理
-    const token = util.cookies.get('torken');
-    // 让每个请求携带token-- ['X-Token']为自定义key 请根据实际情况自行修改
-    config.headers['Authorization'] = token;
-
+    //请求带上token
+    if (util.cookies.get('token')) {
+      config.headers.Authorization='Bearer '+util.cookies.get('token')
+    }
     return config
   },
   error => {

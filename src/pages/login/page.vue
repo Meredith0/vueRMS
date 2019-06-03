@@ -127,11 +127,7 @@
        * @description 接收选择一个用户快速登录的事件
        * @param {Object} user 用户信息
        */
-      // handleUserBtnClick(user) {
-      //     this.formLogin.username = user.username
-      //     this.formLogin.password = user.password
-      //     this.submit()
-      // },
+
       /**
        * @description 提交表单
        */

@@ -21,7 +21,6 @@ export default {
       return new Promise((resolve, reject) => {
         // 开始请求登录接口
         postRequest("/signin",{username,password})
-
         .then(async res => {
           // 设置 cookie 一定要存 uuid 和 token 两个 cookie
           // 整个系统依赖这两个数据进行校验和存储
@@ -29,8 +28,10 @@ export default {
           // token 代表用户当前登录状态 建议在网络请求中携带 token
           // 如有必要 token 需要定时更新，默认保存一天
           //util.cookies.set('uuid', res.uuid);
+
           util.cookies.set('token', res.data.token);
           // 设置 vuex 用户信息
+
           await dispatch('d2admin/user/set', {
             name:res.data.username
           }, {root: true});
