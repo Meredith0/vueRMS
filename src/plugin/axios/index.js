@@ -39,7 +39,7 @@ const service = axios.create({
 
 // 默认url前缀
 axios.defaults.baseURL = 'http://127.0.0.1:8088';
-axios.defaults.headers.post['Content-Type'] = 'application/json';
+//axios.defaults.headers.post['Content-Type'] = 'application/json';
 //请求拦截器
 axios.interceptors.request.use(
   config => {

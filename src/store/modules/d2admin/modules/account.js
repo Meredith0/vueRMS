@@ -1,6 +1,6 @@
 import util from '@/libs/util.js'
 import {AccountLogin} from '@api/sys.login'
-import {postRequest} from "../../../../utils/api";
+import {postRequest} from "../../../../utils/postRequest";
 
 export default {
   namespaced: true,

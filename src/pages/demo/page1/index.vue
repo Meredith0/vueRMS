@@ -7,7 +7,10 @@
       :columns="columns"
       :data="data"
       :rowHandle="rowHandle"
-      @custom-emit-1="handleCustomEvent">
+      @custom-emit-1="updateEvent"
+      @custom-emit-2="deleteEvent"
+
+    >
     </d2-crud>
 
     <el-dialog
@@ -36,12 +39,44 @@
     <el-button type="primary" @click="add">确 定</el-button>
   </span>
     </el-dialog>
+
+    <el-dialog
+      title="修改员工信息"
+      :visible.sync="dialogVisible4update"
+      width="65%">
+      <el-form :inline="true" class="demo-form-inline">
+        <el-form-item>
+          <el-date-picker
+            text="日期"
+            value-format="yyyy-MM-dd"
+            v-model="updateData.empDate"
+            type="date"
+            placeholder="选择日期"
+            :default-value="updateData.empDate"
+            >
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item label="姓名">
+          <el-input placeholder="员工姓名" v-model="updateData.empName"></el-input>
+        </el-form-item>
+        <el-form-item label="地址">
+          <el-input placeholder="员工地址" v-model="updateData.empAddress"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+    <el-button @click="dialogVisible4update = false">取 消</el-button>
+    <el-button type="primary" @click="update">确 定</el-button>
+  </span>
+    </el-dialog>
   </d2-container>
 
 </template>
 
 <script>
-  import {postRequest} from "../../../utils/api";
+
+  import {putRequest} from "../../../utils/PutRequest";
+  import {postRequest} from "../../../utils/postRequest";
+  import {deleteRequest} from "../../../utils/deleteRequset";
 
   export default {
 
@@ -53,9 +88,12 @@
         this.$axios.get("/emp").then(result => {
             if (result.status === 200) {
               this.data = Array.from(result.data);
-              console.log(this.list)
             } else {
-              alert("获取数据失败")
+              this.$message({
+                showClose: true,
+                message: '获取数据失败',
+                type: 'error'
+              });
             }
           }
         )
@@ -65,29 +103,103 @@
          res=>{
            if (res.status === 204) {
             this.getData();
-             alert("添加成功")
+             this.$message({
+               showClose: true,
+               message: '插入成功',
+               type: 'success'
+             });
            }
          }
        ).catch(
          err=>{
            console.log('err: ', err);
-           alert("添加失败");
+           this.$message({
+             showClose: true,
+             message: '插入失败',
+             type: 'error'
+           });
          }
        ).finally(
           this.dialogVisible = false
         )
       },
 
-      handleCustomEvent({index, row}) {
-        console.log(index);
-        console.log(row)
+      update() {
+        putRequest("/put",this.updateData).then(
+          res=>{
+            if (res.data.status === 204) {
+              this.getData();
+              this.$message({
+                showClose: true,
+                message: '修改成功',
+                type: 'success'
+              });
+            }else {
+              this.$message({
+                showClose: true,
+                message: res.data.msg,
+                type: 'error'
+              });
+            }
+          }
+        ).catch(
+          err=>{
+            console.log('err: ', err);
+            this.$message({
+              showClose: true,
+              message: '修改失败',
+              type: 'error'
+            });
+          }
+        ).finally(
+          this.getData(),
+          this.dialogVisible4update = false
+        )
       },
 
+      updateEvent({row}) {
+        this.dialogVisible4update = true;
+        this.updateData.id = row.id;
+        this.updateData.empName = row.name;
+        this.updateData.empAddress = row.address;
+        this.updateData.empDate = row.date;
+      },
+
+      deleteEvent({row}) {
+        deleteRequest("/emp",{'empId':row.id}).then(
+          res=>{
+            if (res.data.status === 204) {
+              this.getData();
+              this.$message({
+                showClose: true,
+                message: '删除成功',
+                type: 'success'
+              });
+            }else {
+              this.$message({
+                showClose: true,
+                message: res.data.msg,
+                type: 'error'
+              });
+            }
+          }
+        ).catch(
+          err=>{
+            console.log('err: ', err);
+            this.$message({
+              showClose: true,
+              message: err,
+              type: 'error'
+            });
+          }
+        )
+      }
     },
 
     data() {
       return {
         dialogVisible: false,
+        dialogVisible4update:false,
         columns: [
           {
             title: '日期',
@@ -105,19 +217,32 @@
         data: [],
 
         postData:{
+          id:'',
           empDate: '',
           empName:'',
           empAddress:'',
         },
 
+        updateData:{
+          id:'',
+          empDate: '',
+          empName:'',
+          empAddress:'',
+        },
 
         rowHandle: {
           custom: [
             {
-              text: '自定义按钮',
+              text: '修改',
               type: 'warning',
               size: 'small',
               emit: 'custom-emit-1'
+            },
+            {
+              text: '删除',
+              type: 'danger',
+              size: 'small',
+              emit: 'custom-emit-2'
             }
           ]
         }
