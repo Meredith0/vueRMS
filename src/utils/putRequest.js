@@ -6,7 +6,7 @@ export const putRequest = (url, params) => {
     url: url,
     data: params,
     headers: {
-      'Content-Type': 'application/json',
+      'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
     }
   });
 };

@@ -9,10 +9,17 @@
       :rowHandle="rowHandle"
       @custom-emit-1="updateEvent"
       @custom-emit-2="deleteEvent"
-
     >
     </d2-crud>
-
+    <el-pagination
+      ref="pagination"
+      background
+      layout="prev, pager, next"
+      :total="totalCount"
+      :current-page="pageNum"
+      @current-change="paging"
+    >
+    </el-pagination>
     <el-dialog
       title="新增员工"
       :visible.sync="dialogVisible"
@@ -53,7 +60,7 @@
             type="date"
             placeholder="选择日期"
             :default-value="updateData.empDate"
-            >
+          >
           </el-date-picker>
         </el-form-item>
         <el-form-item label="姓名">
@@ -74,20 +81,24 @@
 
 <script>
 
-  import {putRequest} from "../../../utils/PutRequest";
+  import {putRequest} from "../../../utils/putRequest";
   import {postRequest} from "../../../utils/postRequest";
   import {deleteRequest} from "../../../utils/deleteRequset";
 
   export default {
 
     created() {
-      this.getData();
+      this.getMaxPage();
+      this.getData(this.pageNum);
     },
+
     methods: {
-      getData() {
-        this.$axios.get("/emp").then(result => {
-            if (result.status === 200) {
-              this.data = Array.from(result.data);
+      //分页获取员工
+      getData(page) {
+        this.$axios.get("/user/show").then(
+          res => {
+            if (res.status === 200) {
+              this.data = Array.from(res.data);
             } else {
               this.$message({
                 showClose: true,
@@ -98,35 +109,41 @@
           }
         )
       },
+      paging(currentPage) {
+        this.pageNum = currentPage;
+        this.getData(this.pageNum)
+      },
+      //增加员工
       add() {
-        postRequest("/emp",this.postData).then(
-         res=>{
-           if (res.status === 204) {
-            this.getData();
-             this.$message({
-               showClose: true,
-               message: '插入成功',
-               type: 'success'
-             });
-           }
-         }
-       ).catch(
-         err=>{
-           console.log('err: ', err);
-           this.$message({
-             showClose: true,
-             message: '插入失败',
-             type: 'error'
-           });
-         }
-       ).finally(
+        postRequest("/emp", this.postData).then(
+          res => {
+            if (res.status === 204) {
+              this.getData();
+              this.$message({
+                showClose: true,
+                message: '插入成功',
+                type: 'success'
+              });
+            }
+          }
+        ).catch(
+          err => {
+            console.log('err: ', err);
+            this.$message({
+              showClose: true,
+              message: '插入失败',
+              type: 'error'
+            });
+          }
+        ).finally(
           this.dialogVisible = false
         )
       },
 
+      //更新
       update() {
-        putRequest("/put",this.updateData).then(
-          res=>{
+        putRequest("/put", this.updateData).then(
+          res => {
             if (res.data.status === 204) {
               this.getData();
               this.$message({
@@ -134,7 +151,7 @@
                 message: '修改成功',
                 type: 'success'
               });
-            }else {
+            } else {
               this.$message({
                 showClose: true,
                 message: res.data.msg,
@@ -143,7 +160,7 @@
             }
           }
         ).catch(
-          err=>{
+          err => {
             console.log('err: ', err);
             this.$message({
               showClose: true,
@@ -157,6 +174,7 @@
         )
       },
 
+      //触发更新面板
       updateEvent({row}) {
         this.dialogVisible4update = true;
         this.updateData.id = row.id;
@@ -165,9 +183,10 @@
         this.updateData.empDate = row.date;
       },
 
+      //删除
       deleteEvent({row}) {
-        deleteRequest("/emp",{'empId':row.id}).then(
-          res=>{
+        deleteRequest("/user/user", {'userId': row.id}).then(
+          res => {
             if (res.data.status === 204) {
               this.getData();
               this.$message({
@@ -175,7 +194,7 @@
                 message: '删除成功',
                 type: 'success'
               });
-            }else {
+            } else {
               this.$message({
                 showClose: true,
                 message: res.data.msg,
@@ -184,7 +203,7 @@
             }
           }
         ).catch(
-          err=>{
+          err => {
             console.log('err: ', err);
             this.$message({
               showClose: true,
@@ -193,13 +212,22 @@
             });
           }
         )
+      },
+      getMaxPage() {
+
+        this.$axios.get("/total").then(
+          res=>{
+            this.data.totalCount = Math.floor(res.data/20);
+          }
+        );
+
       }
     },
 
     data() {
       return {
         dialogVisible: false,
-        dialogVisible4update:false,
+        dialogVisible4update: false,
         columns: [
           {
             title: '日期',
@@ -216,18 +244,20 @@
         ],
         data: [],
 
-        postData:{
-          id:'',
+        pageNum: 1,//分页
+        totalCount:10000,//总页数
+        postData: {
+          id: '',
           empDate: '',
-          empName:'',
-          empAddress:'',
+          empName: '',
+          empAddress: '',
         },
 
-        updateData:{
-          id:'',
+        updateData: {
+          id: '',
           empDate: '',
-          empName:'',
-          empAddress:'',
+          empName: '',
+          empAddress: '',
         },
 
         rowHandle: {
@@ -247,6 +277,8 @@
           ]
         }
       }
-    }
+    },
+
+
   }
 </script>

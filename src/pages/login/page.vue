@@ -21,8 +21,8 @@
           flex="dir:top main:center cross:center">
           <h1>人事信息管理系统</h1>
           <!-- 表单 -->
-          <div class="page-login--form">
-            <el-card shadow="never">
+          <div class="page-login--form" >
+            <el-card shadow="always" >
               <el-form ref="loginForm" label-position="top" :rules="rules"
                        :model="formLogin" size="default">
                 <el-form-item prop="username">
@@ -51,12 +51,12 @@
                 </el-button>
               </el-form>
             </el-card>
-            <p
-              class="page-login--options"
-              flex="main:justify cross:center">
-              <span><d2-icon name="question-circle"/> 忘记密码</span>
-              <span>注册用户</span>
-            </p>
+<!--            <p-->
+<!--              class="page-login&#45;&#45;options"-->
+<!--              flex="main:justify cross:center">-->
+<!--              <span><d2-icon name="question-circle"/> 忘记密码</span>-->
+<!--              <span>注册用户</span>-->
+<!--            </p>-->
 
           </div>
         </div>
@@ -185,7 +185,7 @@
 
     // 登陆页面控件的容器
     .page-login--content {
-      height: 100%;
+      height: 120%;
       min-height: 500px;
     }
 
@@ -215,7 +215,8 @@
 
     // 登录表单
     .page-login--form {
-      width: 280px;
+      width: 350px;
+      height: 600px;
       // 卡片
       .el-card {
         margin-bottom: 15px;

@@ -1,6 +1,7 @@
 import util from '@/libs/util.js'
-import {AccountLogin} from '@api/sys.login'
 import {postRequest} from "../../../../utils/postRequest";
+import * as qs from "qs";
+import $store from "../../../../store";
 
 export default {
   namespaced: true,
@@ -13,6 +14,7 @@ export default {
      * @param {Object} param password {String} 密码
      * @param {Object} param route {Object} 登录成功后定向的路由对象 任何 vue-router 支持的格式
      */
+
     login({dispatch}, {
       vm,
       username,
@@ -20,31 +22,78 @@ export default {
     }) {
       return new Promise((resolve, reject) => {
         // 开始请求登录接口
-        postRequest("/signin",{username,password})
-        .then(async res => {
-          // 设置 cookie 一定要存 uuid 和 token 两个 cookie
-          // 整个系统依赖这两个数据进行校验和存储
-          // uuid 是用户身份唯一标识 用户注册的时候确定 并且不可改变 不可重复
-          // token 代表用户当前登录状态 建议在网络请求中携带 token
-          // 如有必要 token 需要定时更新，默认保存一天
-          //util.cookies.set('uuid', res.uuid);
+        let menuEmp = [
+          {path: '/index', title: '首页', icon: 'home'},
+          {path: '/demo/salary', title: '工资管理'},
+          {path: '/demo/checkState', title: '考勤状况管理'},
+        ];
+        let menuAdmin = [
+          {path: '/index', title: '首页', icon: 'home'},
+          {path: '/demo/user', title: '用户管理', },
+          {path: '/demo/emp', title: '员工管理'},
+          {path: '/demo/salary', title: '工资管理',},
+          {path: '/demo/position', title: '职位管理'},
+          {path: '/demo/dept', title: '部门管理'},
+          {
+            title: '考勤管理',
+            icon: 'folder-o',
+            children: [
+              {path: '/demo/checkState', title: '考勤状况管理'},
+              {path: '/demo/checkWork', title: '考勤信息管理'},
+            ]
+          },
+          {path: '/demo/affiche', title: '公告管理'},
+          {path: '/demo/reportDiagram', title: '报表'}
+        ];
+        let menuDept = [{path: '/demo/emp', title: '员工管理'},
+          {path: '/demo/salary', title: '工资管理',},
+          {path: '/demo/position', title: '职位管理'},
+          {path: '/demo/dept', title: '部门管理'},
+          {
+            title: '考勤管理',
+            icon: 'folder-o',
+            children: [
+              {path: '/demo/checkState', title: '考勤状况管理'},
+              {path: '/demo/checkWork', title: '考勤信息管理'},
+            ]
+          }];
 
-          util.cookies.set('token', res.data.token);
-          // 设置 vuex 用户信息
+          postRequest("authentication/login",
+            qs.stringify({username, password}))
+          .then(async res => {
+            // 设置 cookie 一定要存 uuid 和 token 两个 cookie
+            // 整个系统依赖这两个数据进行校验和存储
+            // uuid 是用户身份唯一标识 用户注册的时候确定 并且不可改变 不可重复
+            // token 代表用户当前登录状态 建议在网络请求中携带 token
+            // 如有必要 token 需要定时更新，默认保存一天
 
-          await dispatch('d2admin/user/set', {
-            name:res.data.username
-          }, {root: true});
-          // 用户登录后从持久化数据加载一系列的设置
-          await dispatch('load');
-          // 结束
-          resolve()
-        })
-        .catch(err => {
-          console.log('err: ', err);
-          alert("密码错误");
-          reject(err)
-        })
+            //设置菜单
+            if (res.data.auth === 'admin') {
+              $store.commit('d2admin/menu/asideSet', menuAdmin);
+            }
+            if (res.data.auth === 'dept') {
+              $store.commit('d2admin/menu/asideSet', menuDept);
+            }
+            if (res.data.auth === 'employee') {
+              $store.commit('d2admin/menu/asideSet', menuEmp);
+            }
+
+            util.cookies.set('token', res.data.token);
+            // 设置 vuex 用户信息
+
+            await dispatch('d2admin/user/set', {
+              name: res.data.username
+            }, {root: true});
+            // 用户登录后从持久化数据加载一系列的设置
+            await dispatch('load');
+            // 结束
+            resolve()
+          })
+          .catch(err => {
+            console.log('err: ', err);
+            alert("密码错误");
+            reject(err)
+          })
       })
     },
     /**

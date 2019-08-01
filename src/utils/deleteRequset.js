@@ -6,7 +6,7 @@ export const deleteRequest = (url, params) => {
   return axios({
     method: 'delete',
     url: url,
-    data: qs.stringify(params),
+    data: params,
     headers: {
       'Content-Type':'application/x-www-form-urlencoded'
     }

@@ -1,7 +1,8 @@
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 // 拼接路径
-const resolve = dir => require('path').join(__dirname, dir)
+const resolve = dir => require('path').join(__dirname, dir);
+const webpack = require('webpack');
 
 // 增加环境变量
 process.env.VUE_APP_VERSION = require('./package.json').version
@@ -15,7 +16,7 @@ module.exports = {
   publicPath, // 根据你的实际情况更改这里
   lintOnSave: true,
   devServer: {
-    publicPath
+    publicPath,
   },
   css: {
     loaderOptions: {
@@ -25,6 +26,19 @@ module.exports = {
       }
     }
   },
+
+  configureWebpack: {
+    plugins: [
+
+      new webpack.ProvidePlugin({
+        $: 'jquery',
+        jquery: 'jquery',
+        'window.jQuery': 'jquery',
+        jQuery: 'jquery',
+        Popper: ['popper.js', 'default']
+      })
+  ]
+  },
   // 默认设置: https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-service/lib/config/base.js
   chainWebpack: config => {
     /**
@@ -33,6 +47,7 @@ module.exports = {
      * https://cli.vuejs.org/zh/guide/html-and-static-assets.html#preload
      * 而且预渲染时生成的 prefetch 标签是 modern 版本的，低版本浏览器是不需要的
      */
+
 
     config.plugins
     .delete('prefetch')
@@ -101,6 +116,9 @@ module.exports = {
     // 重新设置 alias
     config.resolve.alias
     .set('@api', resolve('src/api'))
+    // .set('@', resolve('./static/js/jquery-3.0.0.js'))
+    //  .set('jquery', resolve('./static/js/jquery-3.0.0.js'));
+
     // node
     config.node
     .set('__dirname', true)
